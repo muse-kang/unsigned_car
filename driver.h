@@ -8,6 +8,7 @@
 
 #include "v2d.h"
 #include "DInterface.h"
+#include "fsm.h"
 
 
 #ifndef MAX
@@ -66,6 +67,8 @@ class Driver {
 		void drive(shared_use_st *s);
 
 	private:
+		// FSM
+		Fsm fsm;
 		// Utility functions.
 		bool isStuck();
 		float getAllowedSpeed();

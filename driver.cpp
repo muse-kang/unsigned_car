@@ -99,7 +99,11 @@ bool Driver::isStuck()
 // Drive during race.
 void Driver::drive(shared_use_st *s)
 {
+	static int myLane = -1;
+	static int myStatus = -1;
+
 	m_s = s;
+	printf("toStart = %.2lf\n", s->toStart);
 
 	if (isStuck()) 
 	{
@@ -107,10 +111,29 @@ void Driver::drive(shared_use_st *s)
 		m_s->backwardCmd = GEAR_BACKWARD; // Reverse gear.
 		m_s->accelCmd = 1.0f;			  // 100% accelerator pedal.
 		m_s->brakeCmd = 0.0f;	          // No brakes.
+
+		if (myStatus != 1) {
+			myStatus = 1;
+			printf("I'm stuck!!!\n");
+		}
 	}
 	else 
 	{
-		m_s->steerCmd = (m_s->angle - m_s->toMiddle / m_s->track_width) / STEER_LOCK;
+		fsm.Update(m_s);
+
+		if (myStatus != 0) {
+			myStatus = 0;
+			printf("I'm driving...\n");
+		}
+
+		if (fsm.GetLane() != myLane) {
+			myLane = fsm.GetLane();
+			printf("Lane: %d\n", myLane);
+		}
+		myLane = 0;
+
+		double myMiddle = m_s->toMiddle + myLane * 3;
+		m_s->steerCmd = (m_s->angle - myMiddle / m_s->track_width) / STEER_LOCK;
 		m_s->backwardCmd = GEAR_FORWARD;
 		m_s->brakeCmd = 0.0f;
 		m_s->accelCmd = 0.2f;
@@ -120,11 +143,19 @@ void Driver::drive(shared_use_st *s)
 		double c = 2.772;
 		double d = -0.693;
 		double min, v;
-		double vmax = 20.0;
+		double vmax = fsm.GetVMax();
+		printf("vmax = %.2lf myMiddle = %.2lf\n", vmax, myMiddle);
+		printf("%.2lf %.2lf %.2lf %.2lf %.2lf\n", m_s->dist_cars[0], m_s->dist_cars[2], m_s->dist_cars[4], m_s->dist_cars[6], m_s->dist_cars[8]);
+		printf("%.2lf %.2lf %.2lf %.2lf %.2lf\n", m_s->dist_cars[1], m_s->dist_cars[3], m_s->dist_cars[5], m_s->dist_cars[7], m_s->dist_cars[9]);
 
-		min = 20.0;
+		min = vmax;
+		v = vmax;
 		for (int i = 0; i < 10; i += 2)
 		{
+			if (fabs((float) (m_s->dist_cars[i+1] - myMiddle)) > 2.f) {
+				continue;
+			}
+
 			v = vmax * (1 - exp(-c / vmax*m_s->dist_cars[i] - d));
 
 			if (v < min)

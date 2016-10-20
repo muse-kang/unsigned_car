@@ -1,1 +1,1 @@
-cl %* main.cpp DInterface.cpp driver.cpp
+cl %* main.cpp DInterface.cpp driver.cpp fsm.cpp
