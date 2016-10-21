@@ -1,10 +1,10 @@
 /***************************************************************************
 
-    file                 : driver.cpp
-    created              : Thu Dec 20 01:21:49 CET 2002
-    copyright            : (C) 2002-2004 Bernhard Wymann
-    email                : berniw@bluewin.ch
-    version              : $Id: driver.cpp,v 1.16.2.2 2008/12/31 03:53:53 berniw Exp $
+	file                 : driver.cpp
+	created              : Thu Dec 20 01:21:49 CET 2002
+	copyright            : (C) 2002-2004 Bernhard Wymann
+	email                : berniw@bluewin.ch
+	version              : $Id: driver.cpp,v 1.16.2.2 2008/12/31 03:53:53 berniw Exp $
 
  ***************************************************************************/
 
@@ -19,40 +19,40 @@
 
 #include "driver.h"
 
-const float Driver::MAX_UNSTUCK_ANGLE = 15.0f/180.0f*PI;	// [radians] If the angle of the car on the track is smaller, we assume we are not m_stuck.
-const float Driver::UNSTUCK_TIME_LIMIT = 2.0f;				// [s] We try to get unstuck after this time.
-const float Driver::MAX_UNSTUCK_SPEED = 5.0f;				// [m/s] Below this speed we consider being m_stuck.
-const float Driver::MIN_UNSTUCK_DIST = 3.0f;				// [m] If we are closer to the middle we assume to be not m_stuck.
-const float Driver::G = 9.81f;								// [m/(s*s)] Welcome on Earth.
-const float Driver::FULL_ACCEL_MARGIN = 1.0f;				// [m/s] Margin reduce oscillation of brake/acceleration.
-const float Driver::SHIFT = 0.9f;							// [-] (% of rpmredline) When do we like to shift gears.
-const float Driver::SHIFT_MARGIN = 4.0f;					// [m/s] Avoid oscillating gear changes.
-const float Driver::ABS_SLIP = 2.0f;						// [m/s] range [0..10]
-const float Driver::ABS_RANGE = 5.0f;						// [m/s] range [0..10]
-const float Driver::ABS_MINSPEED = 3.0f;					// [m/s] Below this speed the ABS is disabled (numeric, division by small numbers).
-const float Driver::TCL_SLIP = 2.0f;						// [m/s] range [0..10]
-const float Driver::TCL_RANGE = 10.0f;						// [m/s] range [0..10]
-const float Driver::LOOKAHEAD_CONST = 17.0f;				// [m]
-const float Driver::LOOKAHEAD_FACTOR = 0.33f;				// [-]
-const float Driver::WIDTHDIV = 3.0f;						// [-] Defines the percentage of the track to use (2/WIDTHDIV).
-const float Driver::SIDECOLL_MARGIN = 3.0f;					// [m] Distance between car centers to avoid side collisions.
-const float Driver::BORDER_OVERTAKE_MARGIN = 0.5f;			// [m]
-const float Driver::OVERTAKE_OFFSET_SPEED = 5.0f;			// [m/s] Offset change speed.
-const float Driver::PIT_LOOKAHEAD = 6.0f;					// [m] Lookahead to stop in the pit.
-const float Driver::PIT_BRAKE_AHEAD = 200.0f;				// [m] Workaround for "broken" pitentries.
-const float Driver::PIT_MU = 0.4f;							// [-] Friction of pit concrete.
-const float Driver::MAX_SPEED = 84.0f;						// [m/s] Speed to compute the percentage of brake to apply.
-const float Driver::MAX_FUEL_PER_METER = 0.0008f;			// [liter/m] fuel consumtion.
-const float Driver::CLUTCH_SPEED = 5.0f;					// [m/s]
-const float Driver::CENTERDIV = 0.1f;						// [-] (factor) [0.01..0.6].
-const float Driver::DISTCUTOFF = 200.0f;					// [m] How far to look, terminate while loops.
-const float Driver::MAX_INC_FACTOR = 5.0f;					// [m] Increment faster if speed is slow [1.0..10.0].
-const float Driver::CATCH_FACTOR = 10.0f;					// [-] select MIN(catchdist, dist*CATCH_FACTOR) to overtake.
-const float Driver::CLUTCH_FULL_MAX_TIME = 2.0f;			// [s] Time to apply full clutch.
-const float Driver::USE_LEARNED_OFFSET_RANGE = 0.2f;		// [m] if offset < this use the learned stuff
+const float Driver::MAX_UNSTUCK_ANGLE = 15.0f/180.0f*PI;    // [radians] If the angle of the car on the track is smaller, we assume we are not m_stuck.
+const float Driver::UNSTUCK_TIME_LIMIT = 2.0f;              // [s] We try to get unstuck after this time.
+const float Driver::MAX_UNSTUCK_SPEED = 5.0f;               // [m/s] Below this speed we consider being m_stuck.
+const float Driver::MIN_UNSTUCK_DIST = 3.0f;                // [m] If we are closer to the middle we assume to be not m_stuck.
+const float Driver::G = 9.81f;                              // [m/(s*s)] Welcome on Earth.
+const float Driver::FULL_ACCEL_MARGIN = 1.0f;               // [m/s] Margin reduce oscillation of brake/acceleration.
+const float Driver::SHIFT = 0.9f;                           // [-] (% of rpmredline) When do we like to shift gears.
+const float Driver::SHIFT_MARGIN = 4.0f;                    // [m/s] Avoid oscillating gear changes.
+const float Driver::ABS_SLIP = 2.0f;                        // [m/s] range [0..10]
+const float Driver::ABS_RANGE = 5.0f;                       // [m/s] range [0..10]
+const float Driver::ABS_MINSPEED = 3.0f;                    // [m/s] Below this speed the ABS is disabled (numeric, division by small numbers).
+const float Driver::TCL_SLIP = 2.0f;                        // [m/s] range [0..10]
+const float Driver::TCL_RANGE = 10.0f;                      // [m/s] range [0..10]
+const float Driver::LOOKAHEAD_CONST = 17.0f;                // [m]
+const float Driver::LOOKAHEAD_FACTOR = 0.33f;               // [-]
+const float Driver::WIDTHDIV = 3.0f;                        // [-] Defines the percentage of the track to use (2/WIDTHDIV).
+const float Driver::SIDECOLL_MARGIN = 3.0f;                 // [m] Distance between car centers to avoid side collisions.
+const float Driver::BORDER_OVERTAKE_MARGIN = 0.5f;          // [m]
+const float Driver::OVERTAKE_OFFSET_SPEED = 5.0f;           // [m/s] Offset change speed.
+const float Driver::PIT_LOOKAHEAD = 6.0f;                   // [m] Lookahead to stop in the pit.
+const float Driver::PIT_BRAKE_AHEAD = 200.0f;               // [m] Workaround for "broken" pitentries.
+const float Driver::PIT_MU = 0.4f;                          // [-] Friction of pit concrete.
+const float Driver::MAX_SPEED = 84.0f;                      // [m/s] Speed to compute the percentage of brake to apply.
+const float Driver::MAX_FUEL_PER_METER = 0.0008f;           // [liter/m] fuel consumtion.
+const float Driver::CLUTCH_SPEED = 5.0f;                    // [m/s]
+const float Driver::CENTERDIV = 0.1f;                       // [-] (factor) [0.01..0.6].
+const float Driver::DISTCUTOFF = 200.0f;                    // [m] How far to look, terminate while loops.
+const float Driver::MAX_INC_FACTOR = 5.0f;                  // [m] Increment faster if speed is slow [1.0..10.0].
+const float Driver::CATCH_FACTOR = 10.0f;                   // [-] select MIN(catchdist, dist*CATCH_FACTOR) to overtake.
+const float Driver::CLUTCH_FULL_MAX_TIME = 2.0f;            // [s] Time to apply full clutch.
+const float Driver::USE_LEARNED_OFFSET_RANGE = 0.2f;        // [m] if offset < this use the learned stuff
 
-const float Driver::TEAM_REAR_DIST = 50.0f;					//
-const int Driver::TEAM_DAMAGE_CHANGE_LEAD = 700;			// When to change position in the team?
+const float Driver::TEAM_REAR_DIST = 50.0f;                 //
+const int Driver::TEAM_DAMAGE_CHANGE_LEAD = 700;            // When to change position in the team?
 
 
 Driver::Driver()
@@ -76,19 +76,19 @@ bool Driver::isStuck()
 {
 	if (fabs(m_s->angle) > MAX_UNSTUCK_ANGLE &&
 		m_s->speed < MAX_UNSTUCK_SPEED &&
-		fabs(m_s->toMiddle) > MIN_UNSTUCK_DIST) 
+		fabs(m_s->toMiddle) > MIN_UNSTUCK_DIST)
 	{
-		if (m_stuck > m_MAX_UNSTUCK_COUNT && m_s->toMiddle*m_s->angle < 0.0) 
+		if (m_stuck > m_MAX_UNSTUCK_COUNT && m_s->toMiddle*m_s->angle < 0.0)
 		{
 			return true;
 		}
-		else 
+		else
 		{
 			m_stuck++;
 			return false;
 		}
 	}
-	else 
+	else
 	{
 		m_stuck = 0;
 		return false;
@@ -99,25 +99,26 @@ bool Driver::isStuck()
 // Drive during race.
 void Driver::drive(shared_use_st *s)
 {
-	static int myLane = -1;
+	static float myLane = -1;
 	static int myStatus = -1;
 
 	m_s = s;
-	printf("toStart = %.2lf\n", s->toStart);
+	//printf("toStart = %.2lf\n", s->toStart);
 
-	if (isStuck()) 
+	if (isStuck())
 	{
-		m_s->steerCmd = -m_s->angle / STEER_LOCK;
+		m_s->steerCmd = m_s->angle / STEER_LOCK;
 		m_s->backwardCmd = GEAR_BACKWARD; // Reverse gear.
-		m_s->accelCmd = 1.0f;			  // 100% accelerator pedal.
-		m_s->brakeCmd = 0.0f;	          // No brakes.
+		m_s->accelCmd = 1.0f;             // 100% accelerator pedal.
+		m_s->brakeCmd = 0.0f;             // No brakes.
 
 		if (myStatus != 1) {
 			myStatus = 1;
 			printf("I'm stuck!!!\n");
+			fsm.SetStat(4);
 		}
 	}
-	else 
+	else
 	{
 		fsm.Update(m_s);
 
@@ -128,9 +129,8 @@ void Driver::drive(shared_use_st *s)
 
 		if (fsm.GetLane() != myLane) {
 			myLane = fsm.GetLane();
-			printf("Lane: %d\n", myLane);
+//			printf("Lane: %.1f\n", myLane);
 		}
-		myLane = 0;
 
 		double myMiddle = m_s->toMiddle + myLane * 3;
 		m_s->steerCmd = (m_s->angle - myMiddle / m_s->track_width) / STEER_LOCK;
@@ -144,15 +144,15 @@ void Driver::drive(shared_use_st *s)
 		double d = -0.693;
 		double min, v;
 		double vmax = fsm.GetVMax();
-		printf("vmax = %.2lf myMiddle = %.2lf\n", vmax, myMiddle);
-		printf("%.2lf %.2lf %.2lf %.2lf %.2lf\n", m_s->dist_cars[0], m_s->dist_cars[2], m_s->dist_cars[4], m_s->dist_cars[6], m_s->dist_cars[8]);
-		printf("%.2lf %.2lf %.2lf %.2lf %.2lf\n", m_s->dist_cars[1], m_s->dist_cars[3], m_s->dist_cars[5], m_s->dist_cars[7], m_s->dist_cars[9]);
+//		printf("vmax = %.2lf myLane = %d, myMiddle = %.2lf toMiddle = %.2f\n", vmax, myLane, myMiddle, m_s->toMiddle);
+//		printf("%.2lf %.2lf %.2lf %.2lf %.2lf\n", m_s->dist_cars[0], m_s->dist_cars[2], m_s->dist_cars[4], m_s->dist_cars[6], m_s->dist_cars[8]);
+//		printf("%.2lf %.2lf %.2lf %.2lf %.2lf\n", m_s->dist_cars[1], m_s->dist_cars[3], m_s->dist_cars[5], m_s->dist_cars[7], m_s->dist_cars[9]);
 
 		min = vmax;
 		v = vmax;
 		for (int i = 0; i < 10; i += 2)
 		{
-			if (fabs((float) (m_s->dist_cars[i+1] - myMiddle)) > 2.f) {
+			if (fabs((float) (m_s->dist_cars[i+1] - m_s->toMiddle)) > 2.f) {
 				continue;
 			}
 
@@ -178,11 +178,11 @@ void Driver::drive(shared_use_st *s)
 		m_s->steerCmd = filterSColl(getSteer());
 		m_s->backwardCmd = getGear();
 		m_s->brakeCmd = filterBrakeSpeed(filterBColl(getBrake()));
-		if (m_s->brakeCmd == 0.0f) 
+		if (m_s->brakeCmd == 0.0f)
 		{
 			m_s->accelCmd = filterTrk(filterOverlap(getAccel()));
 		}
-		else 
+		else
 		{
 			m_s->accelCmd = 0.0f;
 		}
@@ -238,7 +238,7 @@ float Driver::getAllowedSpeed()
 		r += dr;
 	} else {
 		float tdr = dr*(1.0f - MIN(1.0f, fabs(myoffset)*2.0f/segment->width));
-		r += tdr;	
+		r += tdr;
 	}
 	// README: the outcommented code is the more save version.
 	/*if ((alone > 0 && fabs(myoffset) < USE_LEARNED_OFFSET_RANGE) ||
@@ -251,7 +251,7 @@ float Driver::getAllowedSpeed()
 	return sqrt((mu*G*r)/(1.0f - MIN(1.0f, r*CA*mu/mass)));
 #endif
 
-	return	1.0;
+	return  1.0;
 }
 
 
@@ -266,7 +266,7 @@ float Driver::getDistToSegEnd()
 	}
 #endif
 
-	return	1.0;
+	return  1.0;
 }
 
 
@@ -288,7 +288,7 @@ float Driver::getAccel()
 	}
 #endif
 
-	return	1.0;
+	return  1.0;
 
 }
 
@@ -389,7 +389,7 @@ float Driver::getSteer()
 	return targetAngle / STEER_LOCK;
 #endif
 
-	return	1.0;
+	return  1.0;
 }
 
 
@@ -604,7 +604,7 @@ float Driver::getOffset()
 	return myoffset;
 #endif
 
-	return	1.0;
+	return  1.0;
 }
 
 
@@ -614,10 +614,10 @@ int Driver::isAlone()
 	int i;
 	for (i = 0; i < opponents->getNOpponents(); i++) {
 		if (opponent[i].getState() & (OPP_COLL | OPP_LETPASS)) {
-			return 0;	// Not alone.
+			return 0;   // Not alone.
 		}
 	}
-	return 1;	// Alone.
+	return 1;   // Alone.
 #endif
 
 	return 1;
@@ -709,7 +709,7 @@ float Driver::filterSColl(float steer)
 				if (fabs(myoffset) > w) {
 					myoffset = (myoffset > 0.0f) ? w : -w;
 				}
-				
+
 				// On straights the car near to the middle can correct more, in turns the car inside
 				// the turn does (because if you leave the track on the turn "inside" you will skid
 				// back to the track.
@@ -791,9 +791,9 @@ float Driver::filterTrk(float accel)
 #ifdef SMS
 	tTrackSeg* seg = car->_trkPos.seg;
 
-	if (m_s->speed < MAX_UNSTUCK_SPEED ||		// Too slow.
-		pit->getInPit() ||							// Pit stop.
-		m_s->toMiddle*speedangle > 0.0f)	// Speedvector points to the inside of the turn.
+	if (m_s->speed < MAX_UNSTUCK_SPEED ||       // Too slow.
+		pit->getInPit() ||                          // Pit stop.
+		m_s->toMiddle*speedangle > 0.0f)    // Speedvector points to the inside of the turn.
 	{
 		return accel;
 	}
